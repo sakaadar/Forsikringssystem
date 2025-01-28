@@ -1,7 +1,9 @@
-package Model;
+package via.pro3.forsikringssystem.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 @Entity
 public class InsurancePolicy
@@ -15,16 +17,18 @@ public class InsurancePolicy
   private String details;
   @Column(nullable = false)
   private double Premium;
-  @Column(nullable = false)
-  private Date startDate;
-  @Column(nullable = false)
-  private Date endDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  @Column(name = "start_date", columnDefinition = "DATE")
+  private LocalDate startDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  @Column(name = "end_date", columnDefinition = "DATE")
+  private LocalDate endDate;
   @ManyToOne
-  @JoinColumn(name="customer_id", nullable=false) // Fremmednøgle til Customer-tabellen
+  @JoinColumn(name="customer_id", nullable=true) // Fremmednøgle til Customer-tabellen
   private Customer customer;
 
   public InsurancePolicy(int Id, String Type, String details, double Premium,
-      Date startDate, Date endDate)
+      LocalDate startDate, LocalDate endDate)
   {
     this.Id = Id;
     this.Type = Type;
@@ -77,23 +81,33 @@ public class InsurancePolicy
     Premium = premium;
   }
 
-  public Date getStartDate()
+  public LocalDate getStartDate()
   {
     return startDate;
   }
 
-  public void setStartDate(Date startDate)
+  public void setStartDate(LocalDate startDate)
   {
     this.startDate = startDate;
   }
 
-  public Date getEndDate()
+  public LocalDate getEndDate()
   {
     return endDate;
   }
 
-  public void setEndDate(Date endDate)
+  public void setEndDate(LocalDate endDate)
   {
     this.endDate = endDate;
   }
+  public Customer getCustomer()
+  {
+    return customer;
+  }
+
+  public void setCustomer(Customer customer)
+  {
+    this.customer = customer;
+  }
+
 }
