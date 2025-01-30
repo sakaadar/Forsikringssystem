@@ -23,28 +23,28 @@ public class CustomerService
   @Transactional
   public Customer addCustomer(Customer customer) {
     try {
-      // 1️⃣ Gem kunden først
+      // Gem kunden først
       Customer savedCustomer = customerRepository.save(customer);
-      System.out.println("✅ Customer gemt med ID: " + savedCustomer.getId());
+      System.out.println(" Customer gemt med ID: " + savedCustomer.getId());
 
-      // 2️⃣ Sikr, at policies ikke er null
+      //  Sikr, at policies ikke er null
       if (customer.getPolicies() != null && !customer.getPolicies().isEmpty()) {
         List<InsurancePolicy> updatedPolicies = new ArrayList<>();
 
         for (InsurancePolicy policy : customer.getPolicies()) {
           policy.setCustomer(savedCustomer); // 🔥 Sæt customer reference
 
-          // 📌 Debugging: Udskriv om customer faktisk bliver sat
+          //  Udskriver om customer faktisk bliver sat
           System.out.println("🔍 InsurancePolicy ID: " + policy.getId() +
               " | Customer ID: " + (policy.getCustomer() != null ? policy.getCustomer().getId() : "NULL"));
 
           updatedPolicies.add(policy);
         }
 
-        // 3️⃣ Gem policies
+        // Gem policies
         List<InsurancePolicy> savedPolicies = insurancePolicyService.savePolicies(updatedPolicies);
 
-        // 4️⃣ Opdater customer med de gemte policies
+        //  Opdater customer med de gemte policies
         savedCustomer.setPolicies(savedPolicies);
         return customerRepository.save(savedCustomer);
       }
